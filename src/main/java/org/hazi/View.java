@@ -10,9 +10,9 @@ public class View {
         String option = "ghyt";
         do {
             switch (option) {
-                case "i" -> {
-                    controller.initAll();
-                }
+//                case "i" -> {
+//                    controller.initAll();
+//                }
                 case "b" -> {
                     String optionb = "ghyt";
                     do {
@@ -25,23 +25,37 @@ public class View {
                                 String title = sc.nextLine();
                                 System.out.print("Add meg a konyv ISBN-jet: ");
                                 String isbn = sc.nextLine();
-                                System.out.print("Add meg a konyv kiadasanak evet: ");
+                                System.out.print("Add meg a konyv kiadasanak idejet (ev-honap-nap): ");
                                 Date dop = Date.valueOf(sc.nextLine());
-                                System.out.print("Add meg a konyv cimet: ");
+                                System.out.print("Add meg a konyv irojat: ");
                                 String author = sc.nextLine();
                                 controller.addBook(title, isbn, dop, author);
                             }
                             case "bm" -> {
-                                controller.updateBook();
+                                System.out.print("Add meg a konyv Id-jat amit modositani szeretnel: ");
+                                Long id = Long.parseLong(sc.nextLine());
+                                System.out.print("Add meg a konyv uj cimet: ");
+                                String title = sc.nextLine();
+                                System.out.print("Add meg a konyv uj ISBN-jet: ");
+                                String isbn = sc.nextLine();
+                                System.out.print("Add meg a konyv uj kiadasanak idejet (ev-honap-nap): ");
+                                Date dop = Date.valueOf(sc.nextLine());
+                                controller.updateBook(id, title, isbn, dop);
                             }
                             case "t" -> {
-                                controller.serachBookTitle();
+                                System.out.print("Add meg a keresett konyv cimet: ");
+                                String title = sc.nextLine();
+                                controller.serachBookTitle(title);
                             }
                             case "a" -> {
-                                controller.serachBookAuthor();
+                                System.out.print("Add meg a keresett konyv irojat: ");
+                                String name = sc.nextLine();
+                                controller.serachBookAuthor(name);
                             }
                             case "i" -> {
-                                controller.serachBookISBN();
+                                System.out.print("Add meg a keresett konyv isbn-jet: ");
+                                String isbn = sc.nextLine();
+                                controller.serachBookISBN(isbn);
                             }
                             default -> {
                                 if (!optionb.equalsIgnoreCase("ghyt")) {
@@ -57,14 +71,14 @@ public class View {
                     String optiona = "ghyt";
                     do {
                         switch (optiona) {
-                            case "ab" -> {
+                            case "la" -> {
                                 controller.listAuthor();
                             }
                             case "aa" -> {
                                 System.out.print("Add meg az iro nevet: ");
                                 String name = sc.nextLine();
                                 System.out.print("Add meg az iro szuletesi evet: ");
-                                Date dob = Date.valueOf(sc.nextLine());
+                                String dob = sc.nextLine();
                                 controller.addAuthor(name, dob);
                             }
                             case "am" -> {
@@ -122,8 +136,8 @@ public class View {
         System.out.println("=".repeat(30));
 //        System.out.println("\tInit books - (i)");
         System.out.println("\tBook menu - (b)");
-        System.out.println("\tAuthor menu - (l)");
-        System.out.println("\tStore menu - (c)");
+        System.out.println("\tAuthor menu - (a)");
+        System.out.println("\tStore menu - (s)");
 //        System.out.println("\tTorol Pizza - (d)");
 //        System.out.println("\tOrszag - tt - (ttcar)");
 //        System.out.println("\tOrszag - tt - EG - (ttcareg)");

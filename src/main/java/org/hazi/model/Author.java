@@ -16,7 +16,7 @@ public class Author {
 
     private String name;
 
-    private Date dob;
+    private String dob;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
@@ -40,11 +40,11 @@ public class Author {
         this.name = name;
     }
 
-    public Date getDob() {
+    public String getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
 
@@ -59,6 +59,6 @@ public class Author {
     @Override
     public String toString() {
         return String.format("Name: %s\n\tId: %d\n\tDob: %s\n",
-                name, id, dob.toString());
+                name, id, dob);
     }
 }
