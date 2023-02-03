@@ -16,7 +16,7 @@ public class Author {
 
     private String name;
 
-    private String dob;
+    private Date dob;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
@@ -40,11 +40,11 @@ public class Author {
         this.name = name;
     }
 
-    public String getDob() {
+    public Date getDob() {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(Date dob) {
         this.dob = dob;
     }
 

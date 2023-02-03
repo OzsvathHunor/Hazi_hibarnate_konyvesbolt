@@ -1,5 +1,6 @@
 package org.hazi;
 
+import java.sql.Date;
 import java.util.Scanner;
 
 public class View {
@@ -20,7 +21,15 @@ public class View {
                                 controller.listBook();
                             }
                             case "ba" -> {
-                                controller.addBook();
+                                System.out.print("Add meg a konyv cimet: ");
+                                String title = sc.nextLine();
+                                System.out.print("Add meg a konyv ISBN-jet: ");
+                                String isbn = sc.nextLine();
+                                System.out.print("Add meg a konyv kiadasanak evet: ");
+                                Date dop = Date.valueOf(sc.nextLine());
+                                System.out.print("Add meg a konyv cimet: ");
+                                String author = sc.nextLine();
+                                controller.addBook(title, isbn, dop, author);
                             }
                             case "bm" -> {
                                 controller.updateBook();
@@ -52,7 +61,11 @@ public class View {
                                 controller.listAuthor();
                             }
                             case "aa" -> {
-                                controller.addAuthor();
+                                System.out.print("Add meg az iro nevet: ");
+                                String name = sc.nextLine();
+                                System.out.print("Add meg az iro szuletesi evet: ");
+                                Date dob = Date.valueOf(sc.nextLine());
+                                controller.addAuthor(name, dob);
                             }
                             case "am" -> {
                                 controller.updateAuthor();

@@ -8,12 +8,14 @@ import org.hibernate.query.Query;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.hazi.model.StateENUM.ACTIVE;
 
 public class Controller implements AutoCloseable{
 
     private HibernateContext model = new HibernateContext();
+    private Scanner sc = new Scanner(System.in);
 
     @Override
     public void close() throws Exception {
@@ -103,8 +105,47 @@ public class Controller implements AutoCloseable{
 
     }
 
-    public void addBook() {
+    public void addBook(String title, String isbn, Date dop, String author) {
+        Book book = new Book();
+        book.setTitle(title);
+        book.setIsbn(isbn);
+        book.setDop(dop);
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
 
+        boolean OK = false;
+        Query<Author> q = session.createQuery("FROM Author ", Author.class);
+        for (var curAuthor : q.list()) {
+            if (curAuthor.getName().equals(author)) {
+                book.setAuthor(curAuthor);
+                session.persist(book);
+                session.flush();
+                curAuthor.getBook().add(book);
+                session.update(curAuthor);
+                tx.commit();
+                OK = true;
+                return;
+            }
+        }
+        if (!OK){
+            System.out.println("A megadott iro nem letezik, kerlek add meg az adatait. (nev mar nem szukseges)");
+            System.out.println("Szuletesi eve: ");
+            Date dob = Date.valueOf(sc.nextLine());
+            addAuthor(author, dob);
+            Query<Author> q2 = session.createQuery("FROM Author ", Author.class);
+            for (var curAuthor : q2.list()) {
+                if (curAuthor.getName().equals(author)) {
+                    book.setAuthor(curAuthor);
+                    session.persist(book);
+                    session.flush();
+                    curAuthor.getBook().add(book);
+                    session.update(curAuthor);
+                    tx.commit();
+                    return;
+                }
+            }
+        }
+        session.close();
     }
 
     public void updateBook() {
@@ -122,7 +163,16 @@ public class Controller implements AutoCloseable{
     public void listAuthor() {
     }
 
-    public void addAuthor() {
+    public void addAuthor(String name, Date dob) {
+        Author author = new Author();
+        author.setName(name);
+        author.setDob(dob);
+
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+        session.persist(author);
+        tx.commit();
+        session.close();
     }
 
     public void updateAuthor() {
