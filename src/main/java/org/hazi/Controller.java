@@ -1,6 +1,7 @@
 package org.hazi;
 
 import org.hazi.model.*;
+import org.hazi.View;
 import org.hazi.model.HibernateContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -144,7 +145,6 @@ public class Controller implements AutoCloseable {
 
     public void updateBook(Long id, String title, String isbn, Date dop) {
         Session session = model.getSession();
-
         Transaction tx = session.beginTransaction();
 
         Query<Book> q = session.createQuery("FROM Book", Book.class);
@@ -166,18 +166,23 @@ public class Controller implements AutoCloseable {
         Transaction tx = session.beginTransaction();
 
         Query<Book> q = session.createQuery("FROM Book", Book.class);
-        boolean ok = false;
+        int count = 0;
+        Long id = 0L;
         for (Book p : q.list()) {
             if (p.getTitle().toLowerCase().contains(title) || p.getTitle().contains(title)) {
                 System.out.println(p);
-                ok = true;
+                count++;
+                id= p.getId();
             }
-        }
-        if (!ok) {
-            System.out.println("A keresett konyv nem talalhato!");
         }
         tx.commit();
         session.close();
+        if (count == 0) {
+            System.out.println("A keresett konyv nem talalhato!");
+        } else if (count == 1){
+            View.updateMenu(sc, id);
+        }
+
     }
 
     public void serachBookAuthor(String authorName) {
@@ -185,18 +190,22 @@ public class Controller implements AutoCloseable {
         Transaction tx = session.beginTransaction();
 
         Query<Author> q = session.createQuery("FROM Author ", Author.class);
-        boolean ok = false;
+        int count = 0;
+        Long id = 0L;
         for (Author p : q.list()) {
             if (p.getName().contains(authorName) || p.getName().toLowerCase().contains(authorName)) {
                 p.getBook().forEach(System.out::println);
-                ok = true;
+                count++;
+                id = p.getId();
             }
-        }
-        if (!ok) {
-            System.out.println("A keresett iro nem talalhato!");
         }
         tx.commit();
         session.close();
+        if (count == 0) {
+            System.out.println("A keresett konyv nem talalhato!");
+        } else if (count == 1){
+            View.updateMenu(sc, id);
+        }
     }
 
     public void serachBookISBN(String isbn) {
@@ -204,18 +213,22 @@ public class Controller implements AutoCloseable {
         Transaction tx = session.beginTransaction();
 
         Query<Book> q = session.createQuery("FROM Book", Book.class);
-        boolean ok = false;
+        int count = 0;
+        Long id = 0L;
         for (Book p : q.list()) {
             if (p.getIsbn().contains(isbn) || p.getIsbn().toLowerCase().contains(isbn)) {
                 System.out.println(p);
-                ok = true;
+                id = p.getId();
+                count++;
             }
-        }
-        if (!ok) {
-            System.out.println("A keresett konyv nem talalhato!");
         }
         tx.commit();
         session.close();
+        if (count == 0) {
+            System.out.println("A keresett konyv nem talalhato!");
+        } else if (count == 1){
+            View.updateMenu(sc, id);
+        }
     }
 
     public void listAuthor() {

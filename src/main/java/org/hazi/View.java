@@ -1,11 +1,13 @@
 package org.hazi;
 
+import org.hazi.model.Book;
+
 import java.sql.Date;
 import java.util.Scanner;
 
 public class View {
 
-    Controller controller;
+    static Controller controller;
     void mainMenu(Scanner sc) {
         String option = "ghyt";
         do {
@@ -177,7 +179,7 @@ public class View {
         System.out.println("\tAuthor menu - (a)");
         System.out.println("\tStore menu - (s)");
         System.out.println("\tStorage menu - (st)");
-        System.out.println("\tKilepes - (q)\n");
+        System.out.println("\tBack - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -189,7 +191,7 @@ public class View {
         System.out.println("\tSearch by title - (t)");
         System.out.println("\tSearch by author - (a)");
         System.out.println("\tSearch by ISBN - (i)");
-        System.out.println("\tVissza - (q)");
+        System.out.println("\tBack - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -199,7 +201,7 @@ public class View {
         System.out.println("\tAuthor added - (aa)");
         System.out.println("\tAuthor modify - (am)");
         System.out.println("\tAuthor delete - (ad)");
-        System.out.println("\tVissza - (q)");
+        System.out.println("\tBack - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -208,7 +210,7 @@ public class View {
         System.out.println("\tList stores - (ls)");
         System.out.println("\tStore added - (sa)");
         System.out.println("\tStore modify - (sm)");
-        System.out.println("\tVissza - (q)");
+        System.out.println("\tBack - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -216,8 +218,36 @@ public class View {
         System.out.println("=".repeat(30));
         System.out.println("\tList Book - Store - (ls)");
         System.out.println("\tList Book - Store (less than 5 piece) - (lf)");
-        System.out.println("\tVissza - (q)");
+        System.out.println("\tBack - (q)");
         System.out.println("=".repeat(30));
+    }
+
+    static void updateMenu(Scanner sc, Long id){
+        String option = "ghyt";
+        do {
+            switch (option){
+                case "u" -> {
+                    System.out.print("Add meg a konyv uj cimet: ");
+                    String title = sc.nextLine();
+                    System.out.print("Add meg a konyv uj ISBN-jet: ");
+                    String isbn = sc.nextLine();
+                    System.out.print("Add meg a konyv uj kiadasanak idejet (ev-honap-nap): ");
+                    Date dop = Date.valueOf(sc.nextLine());
+                    controller.updateBook(id, title, isbn, dop);
+                }
+                default -> {
+                    if (!option.equalsIgnoreCase("ghyt")) {
+                        System.out.println("Nem ismert opcio...");
+                    }
+                }
+            }
+            System.out.println("=".repeat(30));
+            System.out.println("\tUpdate book - (u)");
+            System.out.println("\tBack - (q)");
+            System.out.println("=".repeat(30));
+            System.out.println("Mit lepsz?");
+        } while (!"q".equalsIgnoreCase(option = sc.nextLine()));
+
     }
 
 }

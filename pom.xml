@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hazi</groupId>
-    <artifactId>Hazi_hibarnate_konzvesbolt</artifactId>
+    <artifactId>Hazi_hibarnate_konyvesbolt</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
