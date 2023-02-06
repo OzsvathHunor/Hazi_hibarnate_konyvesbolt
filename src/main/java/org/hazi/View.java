@@ -82,10 +82,18 @@ public class View {
                                 controller.addAuthor(name, dob);
                             }
                             case "am" -> {
-                                controller.updateAuthor();
+                                System.out.print("Add meg a modositani kivant iro Id-jat: ");
+                                Long id = Long.parseLong(sc.nextLine());
+                                System.out.print("Add meg az iro uj nevet: ");
+                                String name = sc.nextLine();
+                                System.out.print("Add meg az iro uj szuletesi evet: ");
+                                String dob = sc.nextLine();
+                                controller.updateAuthor(id, name, dob);
                             }
                             case "ad" -> {
-                                controller.deleteAuthor();
+                                System.out.print("Add meg a torolni kivant iro Id-jat: ");
+                                Long id = Long.parseLong(sc.nextLine());
+                                controller.deleteAuthor(id);
                             }
                             default -> {
                                 if (!optiona.equalsIgnoreCase("ghyt")) {
@@ -105,10 +113,20 @@ public class View {
                                 controller.listStore();
                             }
                             case "sa" -> {
-                                controller.addStore();
+                                System.out.print("Add meg a bolt cimet: ");
+                                String address = sc.nextLine();
+                                System.out.print("Add meg az bolttulajdonos nevet: ");
+                                String owner = sc.nextLine();
+                                controller.addStore(address, owner);
                             }
                             case "sm" -> {
-                                controller.updateStore();
+                                System.out.print("Add meg a modositani kivant bolt Id-jat: ");
+                                Long id = Long.parseLong(sc.nextLine());
+                                System.out.print("Add meg a bolt uj cimet: ");
+                                String address = sc.nextLine();
+                                System.out.print("Add meg az uj bolttulajdonos nevet: ");
+                                String owner = sc.nextLine();
+                                controller.updateStore(id, address, owner);
                             }
                             default -> {
                                 if (!options.equalsIgnoreCase("ghyt")) {
@@ -116,7 +134,7 @@ public class View {
                                 }
                             }
                         }
-                        bookMenu();
+                        storeMenu();
                         System.out.println("Mit lepsz?");
                     } while (!"q".equalsIgnoreCase(options = sc.nextLine()));
                 }
@@ -153,7 +171,7 @@ public class View {
         System.out.println("\tSearch by title - (t)");
         System.out.println("\tSearch by author - (a)");
         System.out.println("\tSearch by ISBN - (i)");
-        System.out.println("\tKilepes - (q)");
+        System.out.println("\tVissza - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -163,7 +181,7 @@ public class View {
         System.out.println("\tAuthor added - (aa)");
         System.out.println("\tAuthor modify - (am)");
         System.out.println("\tAuthor delete - (ad)");
-        System.out.println("\tKilepes - (q)");
+        System.out.println("\tVissza - (q)");
         System.out.println("=".repeat(30));
     }
 
@@ -172,7 +190,7 @@ public class View {
         System.out.println("\tList stores - (ls)");
         System.out.println("\tStore added - (sa)");
         System.out.println("\tStore modify - (sm)");
-        System.out.println("\tKilepes - (q)");
+        System.out.println("\tVissza - (q)");
         System.out.println("=".repeat(30));
     }
 }

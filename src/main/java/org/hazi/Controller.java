@@ -22,20 +22,6 @@ public class Controller implements AutoCloseable {
         model.close();
     }
 
-    public void listBook() {
-        Session session = model.getSession();
-
-        Transaction tx = session.beginTransaction();
-
-        Query<Book> q = session.createQuery("FROM Book", Book.class);
-        for (Book p : q.list()) {
-            System.out.println(p);
-        }
-        session.clear();
-
-        tx.commit();
-        session.close();
-    }
 
 //    public void initAll() {
 //
@@ -106,6 +92,19 @@ public class Controller implements AutoCloseable {
 //
 //    }
 
+    public void listBook() {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query<Book> q = session.createQuery("FROM Book", Book.class);
+        for (Book p : q.list()) {
+            System.out.println(p);
+        }
+
+        tx.commit();
+        session.close();
+    }
+
     public void addBook(String title, String isbn, Date dop, String author) {
         Book book = new Book();
         book.setTitle(title);
@@ -169,10 +168,9 @@ public class Controller implements AutoCloseable {
         Query<Book> q = session.createQuery("FROM Book", Book.class);
         boolean ok = false;
         for (Book p : q.list()) {
-            if (p.getTitle().equals(title)){
+            if (p.getTitle().toLowerCase().contains(title) || p.getTitle().contains(title)){
                 System.out.println(p);
                 ok = true;
-                return;
             }
         }
         if (!ok){
@@ -189,10 +187,9 @@ public class Controller implements AutoCloseable {
         Query<Author> q = session.createQuery("FROM Author ", Author.class);
         boolean ok = false;
         for (Author p : q.list()) {
-            if (p.getName().equals(authorName)){
-                System.out.println(p.getBook());
+            if (p.getName().contains(authorName) || p.getName().toLowerCase().contains(authorName)){
+                p.getBook().forEach(System.out::println);
                 ok = true;
-                return;
             }
         }
         if (!ok){
@@ -209,10 +206,9 @@ public class Controller implements AutoCloseable {
         Query<Book> q = session.createQuery("FROM Book", Book.class);
         boolean ok = false;
         for (Book p : q.list()) {
-            if (p.getIsbn().equals(isbn)){
+            if (p.getIsbn().contains(isbn) || p.getIsbn().toLowerCase().contains(isbn)){
                 System.out.println(p);
                 ok = true;
-                return;
             }
         }
         if (!ok){
@@ -224,16 +220,15 @@ public class Controller implements AutoCloseable {
 
     public void listAuthor() {
         Session session = model.getSession();
-
         Transaction tx = session.beginTransaction();
 
         Query<Author> q = session.createQuery("FROM Author", Author.class);
         for (Author p : q.list()) {
             System.out.println(p);
         }
-        session.clear();
 
-        tx.commit();
+         tx.commit();
+        session.close();
     }
 
     public void addAuthor(String name, String dob) {
@@ -256,18 +251,78 @@ public class Controller implements AutoCloseable {
         return author;
     }
 
-    public void updateAuthor() {
+    public void updateAuthor(Long id, String name, String dob) {
+        Session session = model.getSession();
+
+        Transaction tx = session.beginTransaction();
+
+        Query<Author> q = session.createQuery("FROM Author", Author.class);
+        for (Author p : q.list()) {
+            if (p.getId() == id){
+                p.setName(name);
+                p.setDob(dob);
+                session.persist(p);
+                tx.commit();
+                return;
+            }
+        }
+        session.close();
     }
 
-    public void deleteAuthor() {
+    public void deleteAuthor(Long id) {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query<Author> q = session.createQuery("FROM Author", Author.class);
+        for (Author p : q.list()) {
+            if (p.getId() == id){
+                session.remove(p);
+                tx.commit();
+                return;
+            }
+        }
+        session.close();
     }
 
     public void listStore() {
+        Session session = model.getSession();
+
+        Transaction tx = session.beginTransaction();
+
+        Query<Store> q = session.createQuery("FROM Store", Store.class);
+        for (Store p : q.list()) {
+            System.out.println(p);
+        }
+        tx.commit();
+        session.close();
     }
 
-    public void addStore() {
+    public void addStore(String address, String owner) {
+        Store store = new Store();
+        store.setAddress(address);
+        store.setOwner(owner);
+
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+        session.persist(store);
+        tx.commit();
+        session.close();
     }
 
-    public void updateStore() {
+    public void updateStore(Long id, String address, String owner) {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query<Store> q = session.createQuery("FROM Store ", Store.class);
+        for (Store p : q.list()) {
+            if (p.getId() == id){
+                p.setAddress(address);
+                p.setOwner(owner);
+                session.persist(p);
+                tx.commit();
+                return;
+            }
+        }
+        session.close();
     }
 }
