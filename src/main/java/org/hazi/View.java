@@ -1,7 +1,5 @@
 package org.hazi;
 
-import org.hazi.model.Book;
-
 import java.sql.Date;
 import java.util.Scanner;
 
@@ -19,9 +17,7 @@ public class View {
                     String optionb = "ghyt";
                     do {
                         switch (optionb) {
-                            case "lb" -> {
-                                controller.listBook();
-                            }
+                            case "lb" -> controller.listBook();
                             case "ba" -> {
                                 System.out.print("Add meg a konyv cimet: ");
                                 String title = sc.nextLine();
@@ -73,9 +69,7 @@ public class View {
                     String optiona = "ghyt";
                     do {
                         switch (optiona) {
-                            case "la" -> {
-                                controller.listAuthor();
-                            }
+                            case "la" -> controller.listAuthor();
                             case "aa" -> {
                                 System.out.print("Add meg az iro nevet: ");
                                 String name = sc.nextLine();
@@ -111,9 +105,7 @@ public class View {
                     String options = "ghyt";
                     do {
                         switch (options) {
-                            case "ls" -> {
-                                controller.listStore();
-                            }
+                            case "ls" -> controller.listStore();
                             case "sa" -> {
                                 System.out.print("Add meg a bolt cimet: ");
                                 String address = sc.nextLine();
@@ -144,12 +136,8 @@ public class View {
                     String optionst = "ghyt";
                     do {
                         switch (optionst) {
-                            case "ls" -> {
-                                controller.listBookStore();
-                            }
-                            case "lf" -> {
-                                controller.listBookStoreLessFive();
-                            }
+                            case "ls" -> controller.listBookStore();
+                            case "lf" -> controller.listBookStoreLessFive();
                             default -> {
                                 if (!optionst.equalsIgnoreCase("ghyt")) {
                                     System.out.println("Nem ismert opcio...");
@@ -225,20 +213,17 @@ public class View {
     static void updateMenu(Scanner sc, Long id){
         String option = "ghyt";
         do {
-            switch (option){
-                case "u" -> {
-                    System.out.print("Add meg a konyv uj cimet: ");
-                    String title = sc.nextLine();
-                    System.out.print("Add meg a konyv uj ISBN-jet: ");
-                    String isbn = sc.nextLine();
-                    System.out.print("Add meg a konyv uj kiadasanak idejet (ev-honap-nap): ");
-                    Date dop = Date.valueOf(sc.nextLine());
-                    controller.updateBook(id, title, isbn, dop);
-                }
-                default -> {
-                    if (!option.equalsIgnoreCase("ghyt")) {
-                        System.out.println("Nem ismert opcio...");
-                    }
+            if (option.equals("u")) {
+                System.out.print("Add meg a konyv uj cimet: ");
+                String title = sc.nextLine();
+                System.out.print("Add meg a konyv uj ISBN-jet: ");
+                String isbn = sc.nextLine();
+                System.out.print("Add meg a konyv uj kiadasanak idejet (ev-honap-nap): ");
+                Date dop = Date.valueOf(sc.nextLine());
+                controller.updateBook(id, title, isbn, dop);
+            } else {
+                if (!option.equalsIgnoreCase("ghyt")) {
+                    System.out.println("Nem ismert opcio...");
                 }
             }
             System.out.println("=".repeat(30));
