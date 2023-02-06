@@ -7,8 +7,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hazi.model.StateENUM.ACTIVE;
 
@@ -149,7 +149,7 @@ public class Controller implements AutoCloseable {
 
         Query<Book> q = session.createQuery("FROM Book", Book.class);
         for (Book p : q.list()) {
-            if (p.getId() == id){
+            if (p.getId() == id) {
                 p.setTitle(title);
                 p.setDop(dop);
                 p.setIsbn(isbn);
@@ -168,12 +168,12 @@ public class Controller implements AutoCloseable {
         Query<Book> q = session.createQuery("FROM Book", Book.class);
         boolean ok = false;
         for (Book p : q.list()) {
-            if (p.getTitle().toLowerCase().contains(title) || p.getTitle().contains(title)){
+            if (p.getTitle().toLowerCase().contains(title) || p.getTitle().contains(title)) {
                 System.out.println(p);
                 ok = true;
             }
         }
-        if (!ok){
+        if (!ok) {
             System.out.println("A keresett konyv nem talalhato!");
         }
         tx.commit();
@@ -187,12 +187,12 @@ public class Controller implements AutoCloseable {
         Query<Author> q = session.createQuery("FROM Author ", Author.class);
         boolean ok = false;
         for (Author p : q.list()) {
-            if (p.getName().contains(authorName) || p.getName().toLowerCase().contains(authorName)){
+            if (p.getName().contains(authorName) || p.getName().toLowerCase().contains(authorName)) {
                 p.getBook().forEach(System.out::println);
                 ok = true;
             }
         }
-        if (!ok){
+        if (!ok) {
             System.out.println("A keresett iro nem talalhato!");
         }
         tx.commit();
@@ -206,12 +206,12 @@ public class Controller implements AutoCloseable {
         Query<Book> q = session.createQuery("FROM Book", Book.class);
         boolean ok = false;
         for (Book p : q.list()) {
-            if (p.getIsbn().contains(isbn) || p.getIsbn().toLowerCase().contains(isbn)){
+            if (p.getIsbn().contains(isbn) || p.getIsbn().toLowerCase().contains(isbn)) {
                 System.out.println(p);
                 ok = true;
             }
         }
-        if (!ok){
+        if (!ok) {
             System.out.println("A keresett konyv nem talalhato!");
         }
         tx.commit();
@@ -227,7 +227,7 @@ public class Controller implements AutoCloseable {
             System.out.println(p);
         }
 
-         tx.commit();
+        tx.commit();
         session.close();
     }
 
@@ -258,7 +258,7 @@ public class Controller implements AutoCloseable {
 
         Query<Author> q = session.createQuery("FROM Author", Author.class);
         for (Author p : q.list()) {
-            if (p.getId() == id){
+            if (p.getId() == id) {
                 p.setName(name);
                 p.setDob(dob);
                 session.persist(p);
@@ -275,7 +275,7 @@ public class Controller implements AutoCloseable {
 
         Query<Author> q = session.createQuery("FROM Author", Author.class);
         for (Author p : q.list()) {
-            if (p.getId() == id){
+            if (p.getId() == id) {
                 session.remove(p);
                 tx.commit();
                 return;
@@ -315,7 +315,7 @@ public class Controller implements AutoCloseable {
 
         Query<Store> q = session.createQuery("FROM Store ", Store.class);
         for (Store p : q.list()) {
-            if (p.getId() == id){
+            if (p.getId() == id) {
                 p.setAddress(address);
                 p.setOwner(owner);
                 session.persist(p);
@@ -323,6 +323,62 @@ public class Controller implements AutoCloseable {
                 return;
             }
         }
+        session.close();
+    }
+
+    public void listBookStoreLessFive() {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query<BookStore> q = session.createQuery("FROM BookStore", BookStore.class);
+        for (BookStore p : q.list()) {
+            if (p.getCount() < 5 && p.getStore().getState().equals(ACTIVE)) {
+                System.out.printf("\n%s:\n\t%s - %d piece\n",
+                        p.getBook().getTitle(), p.getStore().getAddress(), p.getCount());
+            }
+        }
+        tx.commit();
+        session.close();
+    }
+
+    public void listBookStore() {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query<BookStore> q = session.createQuery("FROM BookStore", BookStore.class);
+        for (BookStore p : q.list()) {
+            System.out.printf("\n%s:\n\t%s - %d piece\n",
+                    p.getBook().getTitle(), p.getStore().getAddress(), p.getCount());
+
+        }
+        tx.commit();
+        session.close();
+    }
+
+    public void limit3() {
+        Session session = model.getSession();
+        Transaction tx = session.beginTransaction();
+        Map<String, Long> map = new HashMap<>();
+
+        Query<BookStore> q = session.createQuery("FROM BookStore", BookStore.class);
+        for (BookStore p : q.list()) {
+            if (p.getCount() < 5 && p.getStore().getState().equals(ACTIVE)) {
+                map.put(p.getStore().getAddress(), map.getOrDefault(p.getStore().getAddress(), 0L) + (5 - p.getCount()));
+            }
+        }
+
+        map = map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(3)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        for (Map.Entry<String, Long> entry : map.entrySet())
+            if (entry.getValue() >= 10)
+                System.out.println("Store: " + entry.getKey() +
+                        "\n\tDeficit: = " + entry.getValue());
+
+        tx.commit();
         session.close();
     }
 }

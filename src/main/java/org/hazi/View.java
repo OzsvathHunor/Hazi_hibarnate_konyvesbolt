@@ -138,13 +138,33 @@ public class View {
                         System.out.println("Mit lepsz?");
                     } while (!"q".equalsIgnoreCase(options = sc.nextLine()));
                 }
+                case "st" -> {
+                    String optionst = "ghyt";
+                    do {
+                        switch (optionst) {
+                            case "ls" -> {
+                                controller.listBookStore();
+                            }
+                            case "lf" -> {
+                                controller.listBookStoreLessFive();
+                            }
+                            default -> {
+                                if (!optionst.equalsIgnoreCase("ghyt")) {
+                                    System.out.println("Nem ismert opcio...");
+                                }
+                            }
+                        }
+                        storageMenu();
+                        System.out.println("Mit lepsz?");
+                    } while (!"q".equalsIgnoreCase(optionst = sc.nextLine()));
+                }
                 default -> {
                     if (!option.equalsIgnoreCase("ghyt")) {
                         System.out.println("Nem ismert opcio...");
                     }
                 }
             }
-
+            controller.limit3();
             printMenu();
             System.out.println("Mit lepsz?");
         } while (!"q".equalsIgnoreCase(option = sc.nextLine()));
@@ -156,10 +176,8 @@ public class View {
         System.out.println("\tBook menu - (b)");
         System.out.println("\tAuthor menu - (a)");
         System.out.println("\tStore menu - (s)");
-//        System.out.println("\tTorol Pizza - (d)");
-//        System.out.println("\tOrszag - tt - (ttcar)");
-//        System.out.println("\tOrszag - tt - EG - (ttcareg)");
-        System.out.println("\tKilepes - (q)");
+        System.out.println("\tStorage menu - (st)");
+        System.out.println("\tKilepes - (q)\n");
         System.out.println("=".repeat(30));
     }
 
@@ -193,4 +211,13 @@ public class View {
         System.out.println("\tVissza - (q)");
         System.out.println("=".repeat(30));
     }
+
+    private void storageMenu(){
+        System.out.println("=".repeat(30));
+        System.out.println("\tList Book - Store - (ls)");
+        System.out.println("\tList Book - Store (less than 5 piece) - (lf)");
+        System.out.println("\tVissza - (q)");
+        System.out.println("=".repeat(30));
+    }
+
 }
